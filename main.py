@@ -50,21 +50,21 @@ def find_file_by_name(file_name_requested, json_entry):
 # percorre a arvore de entries recursivamente
 # Requesitos:
 # 1.todos nós object da consultam precisam ter object blob com o atributo text,
-# 2.todos nós object pai precisam ter tambem um objeto on Tree -> entries com o atributo name mapeado
+# 2.todos nós object pai precisam ter tambem um objeto on Tree -> entries com o atributo name e path mapeado
 # Ex:   Repository -> object -> on Tree -> entries[0] -> on Blob
 #                               on Blob
 #
 def extract_text(requested_entries, requested_file_name):
-    text_found = []
+    text_found = {}
     for entry in requested_entries:
         is_directory, requested_object_json = find_file_by_name(requested_file_name, entry)
 
         if is_directory:
             recursive_result = extract_text(entry['object']['entries'], requested_file_name)
-            text_found.extend(recursive_result)
+            text_found.update(recursive_result)
 
         elif requested_object_json is not None:
-            text_found.append(requested_object_json['object']['text'])
+            text_found[entry['path']] = requested_object_json['object']['text']
 
     return text_found
 
@@ -80,8 +80,8 @@ def find_dependencies(result):
     # print_founded(found_dependencies)
 
     found_dependencies = extract_text(root_entries, 'build.gradle')
-    # print_founded(found_dependencies)
-
+    print_founded(found_dependencies)
+    print(json.dumps(found_dependencies, indent=4))
 
 def execute_script():
     result = execute_query()

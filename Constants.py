@@ -24,6 +24,7 @@ QUERY_REPOS = """
                 entries {
                   extension
                   name
+                  path
                   object {
                     ... on Tree {
                       entries {
