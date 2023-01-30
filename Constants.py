@@ -15,8 +15,8 @@ QUERY_RATE_LIMIT = """
 
 
 QUERY_REPOS = """
-      {
-         repository(name: "androidskilltest2", owner: "jelvissilva") {
+      query($selected_repo: String!, $owner: String!) { 
+         repository(name: $selected_repo, owner: $owner) {
             id
             object(expression: "master:") {
               ... on Tree {
@@ -57,7 +57,7 @@ QUERY_REPOS = """
                       id
                       text
                     }
-                  }
+                  }                  
                 }
               }
               ... on Blob {
