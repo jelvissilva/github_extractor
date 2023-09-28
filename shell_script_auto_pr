@@ -1,0 +1,46 @@
+#!/bin/bash
+
+
+file="repos.txt"
+while read -r line; do
+
+	echo -e "$line\n"
+
+	git clone -b develop --single-branch $line
+	#git clone -b develop --single-branch git@github.com:userabc/git-automation.git
+	cd $line/
+
+	#git pull git@github.com:userabc/git-automation.git 
+	git pull 
+	git branch patch/update_gitsystem
+	git checkout patch/update_gitsystem
+
+	sleep 20
+
+	#sed -i -e '/UI:/{n;n;s/\(imageTag\).*/\1: '"$1"' /}' \
+	#       -e '/DB:/{n;n;s/\(imageTag\).*/\1: '"$2"' /}' \
+	#       test.yaml
+
+
+	cp -r dirASerCopiado dirDestino
+	
+	sleep 10
+
+	git add  .github/*
+
+	git commit -m "atualização de arquivos de automação github"
+
+	sleep 5
+
+	#git push git@github.com:userabc/git-automation release
+	git push
+
+
+	echo ghp_YOUR_TOKEN | gh auth login --with-token
+
+	gh pr create --title "Atualização de arquivos de automação github" --body "Atualização dos arquivos via script"
+
+done <$file
+
+
+
